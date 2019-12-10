@@ -7,8 +7,15 @@ CURRENT_BUILD_TYPE ?= nogapps
 
 CURRENT_DEVICE=$(shell echo "$(TARGET_PRODUCT)" | cut -d'_' -f 2,3)
 
+ifeq ($(CURRENT_BUILD_TYPE), nogapps)
+     TWICE_BUILD_ZIP_TYPE := VANILLA
+  else
+     TWICE_BUILD_ZIP_TYPE := GAPPS
+endif
+
 ifeq ($(TWICE_OFFICIAL), true)
    LIST = $(shell cat vendor/twice/twice.devices | awk '{ print $$1 }')
+
     ifeq ($(filter $(CURRENT_DEVICE), $(LIST)), $(CURRENT_DEVICE))
       IS_OFFICIAL=true
       TWICE_BUILD_TYPE := OFFICIAL
@@ -28,7 +35,7 @@ TWICE_BUILD_DATE := $(TWICE_DATE_YEAR)$(TWICE_DATE_MONTH)$(TWICE_DATE_DAY)-$(TWI
 
 TARGET_PRODUCT_SHORT := $(subst aosp_,,$(TWICE_BUILD))
 
-TWICE_VERSION := TwiceOS-$(TWICE_BUILD)-$(TWICE_PLATFORM_VERSION)-$(TWICE_BUILD_DATE)-$(TWICE_BUILD_TYPE)
+TWICE_VERSION := TwiceOS-$(TWICE_BUILD)-$(TWICE_PLATFORM_VERSION)-$(TWICE_BUILD_DATE)-$(TWICE_BUILD_TYPE)-$(TWICE_BUILD_ZIP_TYPE)
 TWICE_VERSION_PROP := ten
 
 TWICE_PROPERTIES := \
@@ -36,4 +43,6 @@ TWICE_PROPERTIES := \
     org.twice.version.display=$(TWICE_VERSION) \
     org.twice.build_date=$(TWICE_BUILD_DATE) \
     org.twice.build_date_utc=$(TWICE_BUILD_DATE_UTC) \
-    org.twice.build_type=$(TWICE_BUILD_TYPE)
+    org.twice.build_type=$(TWICE_BUILD_TYPE) \
+    org.twice.ziptype=$(TWICE_BUILD_ZIP_TYPE)
+
