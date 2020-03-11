@@ -2,8 +2,21 @@
 TWICE_PLATFORM_VERSION := 1.0
 
 # Set all versions
-TWICE_BUILD_TYPE ?= UNOFFICIAL
+TWICE_BUILD_TYPE := UNOFFICIAL
 CURRENT_BUILD_TYPE ?= nogapps
+
+CURRENT_DEVICE=$(shell echo "$(TARGET_PRODUCT)" | cut -d'_' -f 2,3)
+
+ifeq ($(TWICE_OFFICIAL), true)
+   LIST = $(shell cat vendor/twice/twice.devices | awk '{ print $$1 }')
+    ifeq ($(filter $(CURRENT_DEVICE), $(LIST)), $(CURRENT_DEVICE))
+      IS_OFFICIAL=true
+      TWICE_BUILD_TYPE := OFFICIAL
+    endif
+    ifneq ($(IS_OFFICIAL), true)
+       TWICE_BUILD_TYPE := UNOFFICIAL
+    endif
+endif
 
 TWICE_DATE_YEAR := $(shell date -u +%Y)
 TWICE_DATE_MONTH := $(shell date -u +%m)
