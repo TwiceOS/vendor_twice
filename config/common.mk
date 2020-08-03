@@ -169,4 +169,7 @@ include vendor/pixelstyle/config.mk
 # Customization
 include vendor/google-customization/config.mk
 
+#G-VisualMod
+include vendor/twice/config/gvm.mk
+
 -include $(WORKSPACE)/build_env/image-auto-bits.mk
