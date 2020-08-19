@@ -3,7 +3,7 @@ CURRENT_DEVICE=$(shell echo "$(TARGET_PRODUCT)" | cut -d'_' -f 2,3)
 
 # Twice Version
 TWICE_PLATFORM_VERSION := 1.0
-TWICE_VERSION_PROP := $(TWICE_PLATFORM_VERSION)
+TWICE_VERSION_NAME := TheStoryBegins
 
 # Twice Official Release
 ifeq ($(TWICE_OFFICIAL), true)
@@ -46,10 +46,11 @@ TARGET_PRODUCT_SHORT := $(subst aosp_,,$(TWICE_BUILD))
 TWICE_VERSION := TwiceOS-$(TWICE_BUILD)-$(TWICE_PLATFORM_VERSION)-$(TWICE_BUILD_DATE)-$(TWICE_BUILD_TYPE)-$(TWICE_BUILD_ZIP_TYPE)
 
 TWICE_PROPERTIES := \
-    org.twice.version=$(TWICE_VERSION_PROP) \
+    org.twice.version=$(TWICE_PLATFORM_VERSION) \
     org.twice.version.display=$(TWICE_VERSION) \
     org.twice.build_date=$(TWICE_BUILD_DATE) \
     org.twice.build_date_utc=$(TWICE_BUILD_DATE_UTC) \
     org.twice.build_type=$(TWICE_BUILD_TYPE) \
-    org.twice.ziptype=$(TWICE_BUILD_ZIP_TYPE)
+    org.twice.ziptype=$(TWICE_BUILD_ZIP_TYPE) \
+    org.twice.version.name=$(TWICE_VERSION_NAME)
 
