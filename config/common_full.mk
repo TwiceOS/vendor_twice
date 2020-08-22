@@ -1,4 +1,4 @@
-# Inherit common PixelExperience stuff
-$(call inherit-product, vendor/aosp/config/common.mk)
+# Inherit common TwiceOS stuff
+$(call inherit-product, vendor/twice/config/common.mk)
 
 PRODUCT_SIZE := full
