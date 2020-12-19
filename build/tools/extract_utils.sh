@@ -438,6 +438,7 @@ function write_blueprint_packages() {
             printf '\tname: "%s",\n' "$PKGNAME"
             printf '\towner: "%s",\n' "$VENDOR"
             printf '\tsrc: "%s/etc/%s",\n' "$SRC" "$FILE"
+            printf '\tfilename_from_src: true,\n'
         elif [ "$CLASS" = "EXECUTABLES" ]; then
             if [ "$EXTENSION" = "sh" ]; then
                 printf 'sh_binary {\n'
@@ -827,7 +828,7 @@ function write_product_packages() {
         write_blueprint_packages "JAVA_LIBRARIES" "product" "" "P_FRAMEWORK" >> "$ANDROIDBP"
     fi
     local SE_FRAMEWORK=( $(prefix_match "system_ext/framework/") )
-    if [ "${#P_FRAMEWORK[@]}" -gt "0" ]; then
+    if [ "${#SE_FRAMEWORK[@]}" -gt "0" ]; then
         write_blueprint_packages "JAVA_LIBRARIES" "system_ext" "" "SE_FRAMEWORK" >> "$ANDROIDBP"
     fi
     local O_FRAMEWORK=( $(prefix_match "odm/framework/") )
@@ -928,17 +929,17 @@ function write_blueprint_header() {
     [ "$COMMON" -eq 1 ] && local DEVICE="$DEVICE_COMMON"
 
     printf "/**\n" > $1
-    if [ $INITIAL_COPYRIGHT_YEAR -lt 2019 ]; then
+    if [[ $INITIAL_COPYRIGHT_YEAR -lt 2019 ]]; then
         BLUEPRINT_INITIAL_COPYRIGHT_YEAR=2019
     else
         BLUEPRINT_INITIAL_COPYRIGHT_YEAR=$INITIAL_COPYRIGHT_YEAR
     fi
 
     NUM_REGEX='^[0-9]+$'
-    if [ $BLUEPRINT_INITIAL_COPYRIGHT_YEAR -eq $YEAR ]; then
+    if [[ $BLUEPRINT_INITIAL_COPYRIGHT_YEAR -eq $YEAR ]]; then
         printf " * Copyright (C) $YEAR The LineageOS Project\n" >> $1
         printf " * Copyright (C) $YEAR The PixelExperience Project\n" >> $1
-    elif [ $BLUEPRINT_INITIAL_COPYRIGHT_YEAR -le 2019 ]; then
+    elif [[ $BLUEPRINT_INITIAL_COPYRIGHT_YEAR -le 2019 ]]; then
         printf " * Copyright (C) 2019-$YEAR The LineageOS Project\n" >> $1
         printf " * Copyright (C) 2019-$YEAR The PixelExperience Project\n" >> $1
     else
@@ -1005,8 +1006,8 @@ function write_makefile_header() {
             printf "# Copyright (C) $INITIAL_COPYRIGHT_YEAR-$YEAR The PixelExperience Project\n" >> $1
         fi
     else
-        printf "# Copyright (C) $YEAR The LineageOS Project\n" > $1
-        printf "# Copyright (C) $YEAR The PixelExperience Project\n" > $1
+        printf "# Copyright (C) $YEAR The LineageOS Project\n" >> $1
+        printf "# Copyright (C) $YEAR The PixelExperience Project\n" >> $1
     fi
 
     cat << EOF >> $1
@@ -2055,6 +2056,9 @@ function generate_prop_list_from_image() {
 
     find "$image_dir" -not -type d | sed "s#^$image_dir/##" | while read -r FILE
     do
+        if suffix_match_file ".odex" "$FILE" || suffix_match_file ".vdex" "$FILE" ; then
+            continue
+        fi
         # Skip VENDOR_SKIP_FILES since it will be re-generated at build time
         if array_contains "$FILE" "${VENDOR_SKIP_FILES[@]}"; then
             continue

@@ -38,8 +38,7 @@ endif
 
 # Binaries for file-based incremental ota
 PRODUCT_COPY_FILES += \
-    vendor/twice/prebuilt/common/bin/busybox-arm:install/bin/busybox-arm \
-    vendor/twice/prebuilt/common/bin/busybox-x86:install/bin/busybox-x86 \
+    vendor/twice/prebuilt/common/bin/busybox:install/bin/busybox \
     vendor/twice/prebuilt/common/bin/mount_all.sh:install/bin/mount_all.sh \
     vendor/twice/prebuilt/common/bin/mount_functions.sh:install/bin/mount_functions.sh \
     vendor/twice/prebuilt/common/bin/setup_busybox.sh:install/bin/setup_busybox.sh \
